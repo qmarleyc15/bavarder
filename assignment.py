@@ -1,14 +1,17 @@
 from preprocessing import parse_xml_files
 import tensorflow as tf
-import encoderdecoder
+from encoderdecoder import Encoderdecoder
 import numpy as np
 
-
 def train(model, train_inputs, train_labels):
-    with tf.GradientTape() as tape:
-        loss = model(train_inputs, train_labels, training=True)
-    gradients = tape.gradient(loss, model.trainable_variables)
-    model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+    batch_num = train_inputs['input_ids'].shape[0] // 32
+    for i in range(batch_num):
+        input = train_inputs[i*32:i*32+32]
+        label = train_labels[i*32:i*32+32]
+        with tf.GradientTape() as tape:
+            loss = model(input['input_ids'], label['input_ids'], training=True)
+        gradients = tape.gradient(loss, model.trainable_variables)
+        model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
     return loss
 
 def test(model, test_inputs, test_labels):
@@ -21,9 +24,9 @@ def main():
     X_train, X_test, y_train, y_test, tokenizer = parse_xml_files(file_paths)
 
 
-    model = encoderdecoder()
+    model = Encoderdecoder(tokenizer)
     for epoch in range(10):
-        loss = train(model, X_train, y_train, tokenizer)
+        loss = train(model, X_train, y_train)
         perp = np.exp(loss)
 
         print(f"Epoch {epoch+1} - Loss: {loss:.4f} - Perplexity: {perp:.4f}")
@@ -32,4 +35,7 @@ def main():
     perp = np.exp(loss)
 
     print(f"Test - Loss: {loss:.4f} - Perplexity: {perp:.4f}")
+    
 
+if __name__ == '__main__':
+    main()

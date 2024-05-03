@@ -124,13 +124,14 @@ def parse_xml_files(file_paths):
                 child_turn = next(turns, None)
     child_tokenized = tokenizer(child_turns)
     adult_tokenized = tokenizer(adult_turns)
-    print(len(child_turns))
-    print(len(adult_turns))
+    #print(len(child_turns))
+    #print(len(adult_turns))
     X_train, X_test, y_train, y_test = train_test_split(child_turns,adult_turns ,shuffle=True) 
-    X_train = tokenizer(X_train)
-    X_test = tokenizer(X_test)
-    y_train = tokenizer(y_train)
-    y_test = tokenizer(y_test)
+    X_train = tokenizer(X_train,padding=True,truncation=True, return_tensors="tf")
+    X_test = tokenizer(X_test,padding=True, truncation=True,return_tensors="tf")
+    y_train = tokenizer(y_train,padding=True, truncation=True,return_tensors="tf")
+    y_test = tokenizer(y_test,padding=True, truncation=True,return_tensors="tf")
+    print(X_train['input_ids'].shape)
 
     return (X_train, X_test, y_train, y_test, tokenizer)
 file_paths = ['data/adrien1_bia.trs', 'data/adrien2_bia.trs', 'data/adrien3_bia.trs', 
@@ -141,4 +142,4 @@ file_paths = ['data/adrien1_bia.trs', 'data/adrien2_bia.trs', 'data/adrien3_bia.
 # print(len(child_turns))
 
 X_train, X_test, y_train, y_test, tokenizer = parse_xml_files(file_paths)
-print(X_test['input_ids'])
+#print(X_test['input_ids'])
