@@ -141,5 +141,5 @@ file_paths = ['data/adrien1_bia.trs', 'data/adrien2_bia.trs', 'data/adrien3_bia.
 # print(len(adult_turns))
 # print(len(child_turns))
 
-X_train, X_test, y_train, y_test, tokenizer = parse_xml_files(file_paths)
+#X_train, X_test, y_train, y_test, tokenizer = parse_xml_files(file_paths)
 #print(X_test['input_ids'])
