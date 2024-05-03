@@ -2,8 +2,7 @@ import re
 from collections import defaultdict
 import os
 import codecs
-import xml.etree.ElementTree as ET
-import transformers 
+import xml.etree.ElementTree as ET 
 from transformers import FlaubertTokenizer
 from sacremoses import MosesTokenizer, MosesDetokenizer
 from sklearn.model_selection import train_test_split 

@@ -14,12 +14,15 @@ class Encoderdecoder(tf.keras.Model):
         self.tokenizer = tokenizer
         self.encoder = TFFlaubertModel.from_pretrained("flaubert/flaubert_base_cased", from_pt=True)
         #encoder_config = FlaubertConfig()
-        decoder_config = FlaubertConfig(is_encoder=False)
+        decoder_config = FlaubertConfig(is_encoder=False, emb_dim=768)
         self.decoder = TFFlaubertModel(decoder_config)
         #self.embedding = tf.keras.layers.Embedding(tokenizer.vocab_size, self.decoder.config.hidden_size)
         #self.config = EncoderDecoderConfig.from_encoder_decoder_configs(encoder_config, decoder_config)
         #self.model = TFEncoderDecoderModel(encoder=self.encoder, decoder=self.decoder)
-        self.dense = tf.keras.layers.Dense(tokenizer.vocab_size)
+        self.dense = tf.keras.Sequential([
+            tf.keras.layers.Flatten(),
+            tf.keras.layers.Dense(309)
+        ])
         self.optimizer = tf.keras.optimizers.Adam()
         self.inputlayer = tf.keras.layers.InputLayer(input_shape=[None])
             
@@ -30,11 +33,11 @@ class Encoderdecoder(tf.keras.Model):
         x = self.inputlayer(inputs)
         x = self.encoder(x)
         output = self.decoder(None, inputs_embeds=x.last_hidden_state)
-        logits = self.dense(output)
+        logits = self.dense(output.last_hidden_state)
         
         
         if training:
-            loss = tf.nn.sparse_softmax_cross_entropy(targets,logits)
+            loss = tf.nn.sparse_softmax_cross_entropy_with_logits(targets,logits)
             loss = tf.reduce_mean(loss)
             return loss
         else:
