@@ -9,11 +9,6 @@ from sklearn.model_selection import train_test_split
 
 
 
-# class preprocessing():
-#     def __init__(self):
-#         super().__init__()
-        
-#         self.tokenizer = FlaubertTokenizer.from_pretrained("flaubert/flaubert_base_cased")
 
         
 def extract_text(line):
@@ -24,59 +19,7 @@ def extract_text(line):
 
 
 
-# def parse_xml_files( file_paths):
-#     tokenizer = FlaubertTokenizer.from_pretrained("flaubert/flaubert_base_cased")
-        
-#     adult_turns = []
-#     child_turns = []
 
-#     for file_path in file_paths:
-#         if os.path.exists(file_path):
-#             with open(file_path, 'rb') as file:
-#                 content_bytes = file.read()
-
-#                 root = ET.fromstring(content_bytes)
-
-#                 # Determine the adult speaker ID
-#                 adult_speaker_id = None
-#                 for speaker in root.findall('Speakers/Speaker'):
-#                     if speaker.get('name') == 'Adulte':
-#                         adult_speaker_id = speaker.get('id').split('spk')[1]
-#                         break
-
-#                 for turn in root.iter('Turn'):
-#                     speaker_id = turn.get('speaker')
-#                     if speaker_id:
-#                         speaker_id = speaker_id.split('spk')[1]
-
-#                     text_segments = []
-#                     for sync in turn.iter('Sync'):
-#                         text = sync.tail.strip() if sync.tail else ''
-#                         text_segments.append(text)
-
-#                     if text_segments:
-#                         turn_text = ' '.join(text_segments)
-
-#                         if speaker_id == adult_speaker_id:
-#                             adult_turns.append(turn_text)
-#                         else:
-#                             child_turns.append(turn_text)
-                            
-#     child_tokenized = tokenizer(child_turns)
-#     adult_tokenized = tokenizer(adult_turns)
-#     print(len(child_turns))
-#     print(len(adult_turns))
-#     X_train, X_test, y_train, y_test = train_test_split(child_turns,adult_turns ,shuffle=True) 
-#     X_train = tokenizer(X_train)
-#     X_test = tokenizer(X_test)
-#     y_train = tokenizer(y_train)
-#     y_test = tokenizer(y_test)
-
-
-
-    
-
-#     return (X_train, X_test, y_train, y_test)
 def parse_xml_files(file_paths):
     tokenizer = FlaubertTokenizer.from_pretrained("flaubert/flaubert_base_cased")
 
